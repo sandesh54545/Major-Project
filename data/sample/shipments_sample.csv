@@ -1,0 +1,11 @@
+shipment_id,origin,destination,carrier,cargo_type,weight_kg,departure_date,eta,status
+SH-1001,Mumbai,Los Angeles,Maersk,Electronics,18500,2026-04-01,2026-04-25,DELAYED
+SH-1002,Shanghai,Rotterdam,COSCO,Textiles,22000,2026-04-03,2026-04-20,ON_TIME
+SH-1003,Dubai,New York,MSC,Industrial Parts,14000,2026-04-05,2026-04-22,AT_RISK
+SH-1004,Hamburg,Tokyo,CMA CGM,Chemicals,9500,2026-04-07,2026-04-30,ON_TIME
+SH-1005,Los Angeles,Mumbai,Hapag-Lloyd,Electronics,11200,2026-04-10,2026-05-05,ON_TIME
+SH-1006,Shanghai,New York,Maersk,Perishables,6800,2026-04-12,2026-04-28,DELAYED
+SH-1007,Rotterdam,Dubai,MSC,Industrial Parts,17300,2026-04-14,2026-04-26,AT_RISK
+SH-1008,Mumbai,Rotterdam,COSCO,Textiles,21000,2026-04-15,2026-05-10,ON_TIME
+SH-1009,Tokyo,Los Angeles,CMA CGM,Electronics,13500,2026-04-16,2026-05-02,AT_RISK
+SH-1010,Dubai,Singapore,Maersk,Chemicals,8200,2026-04-18,2026-04-25,ON_TIME

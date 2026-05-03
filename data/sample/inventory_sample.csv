@@ -1,0 +1,11 @@
+sku_id,product_name,current_stock,avg_daily_demand,lead_time_days,unit_cost
+SKU-8821,IC Chips A100,255,85,7,48.50
+SKU-4402,Power Supply Unit,820,62,5,32.00
+SKU-7731,Sensor Module,1240,45,10,19.75
+SKU-3310,HDMI Cables,4800,120,3,8.20
+SKU-9901,Motor Drive PCB,380,55,14,67.30
+SKU-1122,Ethernet Switch,650,30,7,42.00
+SKU-2201,Cooling Fan,3200,90,4,12.50
+SKU-5512,Battery Pack,720,48,10,95.00
+SKU-6630,Display Module,310,25,12,145.00
+SKU-4481,Wireless Module,1800,70,6,28.75

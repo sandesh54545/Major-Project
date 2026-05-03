@@ -1,0 +1,1310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Supply Chain Risk Prediction System | Swizosoft</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+/* ========================================================
+   Supply Chain Risk Prediction System - Main Stylesheet
+   Swizosoft (OPC) Private Limited
+   ======================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Syne:wght@400;500;600;700&family=DM+Sans:wght@300;400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:      #0a0d14;
+  --bg2:     #111520;
+  --bg3:     #161b2a;
+  --bg4:     #1c2236;
+  --accent:  #00e5a0;
+  --accent2: #3b82f6;
+  --accent3: #f59e0b;
+  --accent4: #ef4444;
+  --text:    #e8edf8;
+  --text2:   #8892a4;
+  --text3:   #4a5568;
+  --border:  #1e2a42;
+  --border2: #2a3a5a;
+  --green:   #00e5a0;
+  --red:     #ef4444;
+  --yellow:  #f59e0b;
+  --blue:    #3b82f6;
+  --sidebar-w: 220px;
+}
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  overflow-x: hidden;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
+.mono { font-family: 'DM Mono', monospace; }
+
+/* ── LAYOUT ─────────────────────────────────────────────── */
+.layout { display: flex; min-height: 100vh; }
+
+/* ── SIDEBAR ─────────────────────────────────────────────── */
+.sidebar {
+  width: var(--sidebar-w);
+  background: var(--bg2);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 100;
+  overflow-y: auto;
+}
+
+.logo {
+  padding: 20px 16px 16px;
+  border-bottom: 1px solid var(--border);
+}
+.logo-badge {
+  background: var(--accent);
+  color: #000;
+  font-family: 'Syne', sans-serif;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 3px;
+  letter-spacing: 1px;
+  display: inline-block;
+  margin-bottom: 8px;
+}
+.logo h2 { font-size: 14px; font-weight: 600; color: var(--text); }
+.logo p  { font-size: 11px; color: var(--text2); margin-top: 2px; }
+
+.nav { flex: 1; padding: 12px 8px; }
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 13px;
+  color: var(--text2);
+  transition: all .15s;
+  margin-bottom: 2px;
+  border: none;
+  background: none;
+  width: 100%;
+  text-align: left;
+  font-family: 'DM Sans', sans-serif;
+}
+.nav-item:hover { background: var(--bg3); color: var(--text); }
+.nav-item.active {
+  background: rgba(0,229,160,.1);
+  color: var(--accent);
+  border-left: 2px solid var(--accent);
+}
+.nav-icon { width: 16px; text-align: center; font-size: 14px; opacity: .8; }
+.nav-item.active .nav-icon { opacity: 1; }
+
+.sidebar-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+}
+.status-line { font-size: 12px; color: var(--text2); display: flex; align-items: center; gap: 6px; }
+.status-sub { font-size: 10px; color: var(--text3); margin-top: 3px; }
+.status-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--green);
+  display: inline-block;
+  animation: pulse 2s infinite;
+}
+@keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.3} }
+
+/* ── MAIN ───────────────────────────────────────────────── */
+.main { margin-left: var(--sidebar-w); flex: 1; display: flex; flex-direction: column; }
+
+.topbar {
+  background: var(--bg2);
+  border-bottom: 1px solid var(--border);
+  padding: 12px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky; top: 0; z-index: 50;
+}
+.topbar h1 { font-size: 15px; font-weight: 600; }
+.topbar-right { display: flex; align-items: center; gap: 10px; }
+
+.content { padding: 20px 24px; flex: 1; }
+
+/* ── CARDS ──────────────────────────────────────────────── */
+.card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px;
+}
+.card-inner {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 12px;
+}
+
+/* ── GRIDS ──────────────────────────────────────────────── */
+.grid-4 { display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; margin-bottom: 18px; }
+.grid-3 { display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; margin-bottom: 18px; }
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-bottom: 18px; }
+
+/* ── METRIC CARDS ────────────────────────────────────────── */
+.metric-label { font-size: 11px; color: var(--text2); text-transform: uppercase; letter-spacing: .5px; }
+.metric-val   { font-family: 'Syne', sans-serif; font-size: 28px; font-weight: 700; margin: 4px 0 2px; }
+.metric-change{ font-size: 11px; font-family: 'DM Mono', monospace; color: var(--text2); }
+.change-bad { color: var(--red); }
+.change-good{ color: var(--green); }
+
+/* ── TAGS / BADGES ───────────────────────────────────────── */
+.tag {
+  font-size: 11px;
+  padding: 3px 9px;
+  border-radius: 4px;
+  font-family: 'DM Mono', monospace;
+}
+.tag-green  { background: rgba(0,229,160,.15); color: var(--green); }
+.tag-yellow { background: rgba(245,158,11,.15);color: var(--yellow); }
+.tag-red    { background: rgba(239,68,68,.15); color: var(--red); }
+.tag-blue   { background: rgba(59,130,246,.15);color: var(--blue); }
+
+/* ── RISK BADGES ─────────────────────────────────────────── */
+.risk {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 10px;
+  font-family: 'DM Mono', monospace;
+  font-weight: 500;
+  letter-spacing: .3px;
+}
+.risk-high, .risk-critical { background: rgba(239,68,68,.2); color: #ff7070; }
+.risk-med  { background: rgba(245,158,11,.2); color: #fbbf24; }
+.risk-low  { background: rgba(0,229,160,.2);  color: #00e5a0; }
+
+/* ── PROGRESS BAR ───────────────────────────────────────── */
+.bar-wrap { height: 6px; background: var(--border); border-radius: 3px; overflow: hidden; }
+.bar-fill { height: 100%; border-radius: 3px; transition: width .5s ease; }
+
+/* ── BUTTONS ─────────────────────────────────────────────── */
+.btn {
+  padding: 9px 18px;
+  border-radius: 7px;
+  border: none;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 500;
+  font-family: 'DM Sans', sans-serif;
+  transition: all .15s;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.btn-primary { background: var(--accent); color: #000; }
+.btn-primary:hover { opacity: .85; transform: translateY(-1px); }
+.btn-danger  { background: var(--red); color: #fff; }
+.btn-danger:hover { opacity: .85; }
+.btn-outline {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+}
+.btn-outline:hover { border-color: var(--accent); color: var(--accent); }
+.btn-sm { padding: 5px 12px; font-size: 11px; border-radius: 5px; }
+
+/* ── FORMS ───────────────────────────────────────────────── */
+.form-group { margin-bottom: 12px; }
+.form-label {
+  display: block;
+  font-size: 11px;
+  color: var(--text2);
+  margin-bottom: 5px;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+}
+input, select, textarea {
+  width: 100%;
+  background: var(--bg3);
+  border: 1px solid var(--border2);
+  border-radius: 6px;
+  color: var(--text);
+  padding: 8px 12px;
+  font-size: 13px;
+  font-family: 'DM Sans', sans-serif;
+  transition: border-color .15s;
+}
+input:focus, select:focus, textarea:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+select option { background: var(--bg3); }
+
+/* ── TABLES ──────────────────────────────────────────────── */
+table { width: 100%; border-collapse: collapse; font-size: 12px; }
+th {
+  text-align: left;
+  padding: 8px 10px;
+  color: var(--text2);
+  font-weight: 500;
+  font-size: 11px;
+  border-bottom: 1px solid var(--border);
+  text-transform: uppercase;
+  letter-spacing: .5px;
+}
+td {
+  padding: 9px 10px;
+  border-bottom: 1px solid var(--border);
+  color: var(--text);
+}
+tr:last-child td { border-bottom: none; }
+tr:hover td { background: rgba(255,255,255,.02); }
+
+/* ── ALERTS ──────────────────────────────────────────────── */
+.alert {
+  padding: 10px 14px;
+  border-radius: 7px;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 12px;
+}
+.alert-icon { font-size: 14px; flex-shrink: 0; margin-top: 1px; }
+.alert-red    { background: rgba(239,68,68,.1);  border-left: 3px solid var(--red); }
+.alert-yellow { background: rgba(245,158,11,.1); border-left: 3px solid var(--yellow); }
+.alert-green  { background: rgba(0,229,160,.1);  border-left: 3px solid var(--green); }
+.alert-blue   { background: rgba(59,130,246,.1); border-left: 3px solid var(--blue); }
+.alert strong { color: var(--text); font-size: 12px; display: block; margin-bottom: 2px; }
+.alert span   { color: var(--text2); font-size: 11px; }
+
+/* ── SECTION HEADER ─────────────────────────────────────── */
+.sec-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 14px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.sec-title { font-size: 13px; font-weight: 600; color: var(--text); font-family: 'Syne', sans-serif; }
+.sec-sub   { font-size: 11px; color: var(--text2); margin-top: 1px; }
+
+/* ── RECOMMENDATION CARD ─────────────────────────────────── */
+.rec-card {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+  margin-bottom: 10px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+.rec-icon {
+  width: 34px; height: 34px;
+  border-radius: 7px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  font-size: 16px;
+}
+.rec-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; color: var(--text); }
+.rec-desc  { font-size: 11px; color: var(--text2); line-height: 1.5; }
+.rec-actions { margin-top: 10px; display: flex; gap: 8px; }
+
+/* ── UPLOAD ZONE ─────────────────────────────────────────── */
+.upload-zone {
+  border: 2px dashed var(--border2);
+  border-radius: 10px;
+  padding: 24px;
+  text-align: center;
+  cursor: pointer;
+  transition: border-color .2s, background .2s;
+  margin-bottom: 12px;
+}
+.upload-zone:hover { border-color: var(--accent); background: rgba(0,229,160,.03); }
+.upload-zone-icon { font-size: 30px; margin-bottom: 8px; }
+.upload-zone-title { font-size: 13px; font-weight: 500; margin-bottom: 4px; }
+.upload-zone-sub   { font-size: 11px; color: var(--text2); }
+
+/* ── TIMELINE ────────────────────────────────────────────── */
+.timeline-item { display: flex; gap: 12px; margin-bottom: 16px; }
+.tl-left { display: flex; flex-direction: column; align-items: center; }
+.tl-dot  { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.tl-line { width: 1px; flex: 1; background: var(--border); margin: 4px 0; }
+.tl-content .tl-title { font-size: 13px; font-weight: 500; margin-bottom: 2px; }
+.tl-content .tl-sub   { font-size: 11px; color: var(--text2); }
+
+/* ── UPLOAD LOG ─────────────────────────────────────────── */
+.upload-log {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--text2);
+  min-height: 100px;
+  max-height: 200px;
+  overflow-y: auto;
+  white-space: pre-wrap;
+  line-height: 1.7;
+}
+
+/* ── SCROLLBAR ───────────────────────────────────────────── */
+::-webkit-scrollbar { width: 4px; height: 4px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border2); border-radius: 4px; }
+
+/* ── LOADING ─────────────────────────────────────────────── */
+.loading {
+  text-align: center;
+  padding: 40px;
+  color: var(--text2);
+  font-size: 13px;
+}
+.spinner {
+  width: 24px; height: 24px;
+  border: 2px solid var(--border2);
+  border-top-color: var(--accent);
+  border-radius: 50%;
+  animation: spin .7s linear infinite;
+  margin: 0 auto 12px;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* ── MISC ───────────────────────────────────────────────── */
+canvas { border-radius: 6px; }
+
+.mb-4  { margin-bottom: 4px; }
+.mb-8  { margin-bottom: 8px; }
+.mb-12 { margin-bottom: 12px; }
+.mb-16 { margin-bottom: 16px; }
+.mb-20 { margin-bottom: 20px; }
+
+.text-green  { color: var(--green); }
+.text-red    { color: var(--red); }
+.text-yellow { color: var(--yellow); }
+.text-blue   { color: var(--blue); }
+.text-muted  { color: var(--text2); }
+
+.d-flex { display: flex; }
+.align-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-8  { gap: 8px; }
+.gap-12 { gap: 12px; }
+.gap-16 { gap: 16px; }
+.flex-1 { flex: 1; }
+
+/* ── RESPONSIVE ─────────────────────────────────────────── */
+@media (max-width: 900px) {
+  .sidebar { width: 60px; }
+  .sidebar .logo h2, .sidebar .logo p, .sidebar .logo-badge,
+  .sidebar .nav-item span:not(.nav-icon), .sidebar .sidebar-footer p { display: none; }
+  .main { margin-left: 60px; }
+  .grid-4 { grid-template-columns: repeat(2,1fr); }
+  .grid-3 { grid-template-columns: repeat(2,1fr); }
+  .grid-2 { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+<div class="layout">
+  <aside class="sidebar">
+    <div class="logo">
+      <div class="logo-badge">SWIZOSOFT</div>
+      <h2>Supply Chain AI</h2>
+      <p>Risk Prediction System</p>
+    </div>
+    <nav class="nav">
+      <button class="nav-item active" onclick="gotoPage('dashboard',this)"><span class="nav-icon">◈</span> Dashboard</button>
+      <button class="nav-item" onclick="gotoPage('predict',this)"><span class="nav-icon">⊕</span> Predict Risk</button>
+      <button class="nav-item" onclick="gotoPage('inventory',this)"><span class="nav-icon">▦</span> Inventory</button>
+      <button class="nav-item" onclick="gotoPage('suppliers',this)"><span class="nav-icon">◎</span> Suppliers</button>
+      <button class="nav-item" onclick="gotoPage('shipments',this)"><span class="nav-icon">➶</span> Shipments</button>
+      <button class="nav-item" onclick="gotoPage('analytics',this)"><span class="nav-icon">⌗</span> Analytics</button>
+      <button class="nav-item" onclick="gotoPage('recommendations',this)"><span class="nav-icon">✦</span> Recommendations</button>
+      <button class="nav-item" onclick="gotoPage('upload',this)"><span class="nav-icon">↑</span> Upload Data</button>
+    </nav>
+    <div class="sidebar-footer">
+      <p class="status-line"><span class="status-dot"></span>ML Models Active</p>
+      <p class="status-sub">XGBoost · Scikit-learn · MongoDB</p>
+      <p class="status-sub" style="margin-top:6px">FastAPI v0.110 · Python 3.11</p>
+    </div>
+  </aside>
+  <div class="main">
+    <div class="topbar">
+      <h1 id="page-title">Dashboard Overview</h1>
+      <div class="topbar-right">
+        <span class="tag tag-green">● Live</span>
+        <span class="tag tag-blue mono" id="live-time"></span>
+        <button class="btn btn-sm btn-outline" onclick="refreshData()">↻ Refresh</button>
+        <a href="http://localhost:8000/docs" target="_blank" class="btn btn-sm btn-outline">API Docs ↗</a>
+      </div>
+    </div>
+    <div class="content"><div id="page-root"></div></div>
+  </div>
+</div>
+<script>
+/**
+ * API Service - Communicates with FastAPI Backend
+ * Base URL: http://localhost:8000
+ */
+
+const API_BASE = 'http://localhost:8000/api';
+
+const API = {
+  async get(path) {
+    try {
+      const res = await fetch(API_BASE + path);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    } catch (e) {
+      console.warn('API GET failed, using demo data:', path, e.message);
+      return null;
+    }
+  },
+  async post(path, body) {
+    try {
+      const res = await fetch(API_BASE + path, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body)
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    } catch (e) {
+      console.warn('API POST failed, using local simulation:', path, e.message);
+      return null;
+    }
+  }
+};
+
+// Demo/fallback data when backend is not running
+const DEMO = {
+  shipments: [
+    { shipment_id:'SH-2041', origin:'Mumbai', destination:'Los Angeles', carrier:'Maersk', cargo_type:'Electronics', weight_kg:18000, eta:'2026-05-03', status:'DELAYED', delay_risk_pct:87, risk_level:'HIGH' },
+    { shipment_id:'SH-2040', origin:'Shanghai', destination:'Rotterdam', carrier:'COSCO', cargo_type:'Textiles', weight_kg:22000, eta:'2026-05-06', status:'AT_RISK', delay_risk_pct:55, risk_level:'MEDIUM' },
+    { shipment_id:'SH-2039', origin:'Shanghai', destination:'New York', carrier:'MSC', cargo_type:'Industrial Parts', weight_kg:15000, eta:'2026-04-30', status:'AT_RISK', delay_risk_pct:42, risk_level:'MEDIUM' },
+    { shipment_id:'SH-2038', origin:'Hamburg', destination:'Dubai', carrier:'Hapag-Lloyd', cargo_type:'Chemicals', weight_kg:8000, eta:'2026-05-15', status:'ON_TIME', delay_risk_pct:18, risk_level:'LOW' },
+    { shipment_id:'SH-2037', origin:'Berlin', destination:'Tokyo', carrier:'CMA CGM', cargo_type:'Electronics', weight_kg:11000, eta:'2026-05-08', status:'ON_TIME', delay_risk_pct:12, risk_level:'LOW' },
+    { shipment_id:'SH-2036', origin:'Dubai', destination:'Singapore', carrier:'Maersk', cargo_type:'Textiles', weight_kg:6500, eta:'2026-04-29', status:'ON_TIME', delay_risk_pct:25, risk_level:'LOW' },
+    { shipment_id:'SH-2035', origin:'Dubai', destination:'New York', carrier:'MSC', cargo_type:'Industrial Parts', weight_kg:19000, eta:'2026-05-01', status:'AT_RISK', delay_risk_pct:63, risk_level:'HIGH' },
+  ],
+  inventory: [
+    { sku_id:'SKU-8821', product_name:'IC Chips A100', current_stock:255, avg_daily_demand:85, lead_time_days:7, unit_cost:48.50, days_to_stockout:3, risk_level:'CRITICAL', recommended_reorder_qty:2550, safety_stock:893 },
+    { sku_id:'SKU-4402', product_name:'Power Supply Unit', current_stock:820, avg_daily_demand:62, lead_time_days:5, unit_cost:32.00, days_to_stockout:13, risk_level:'HIGH', recommended_reorder_qty:1860, safety_stock:465 },
+    { sku_id:'SKU-7731', product_name:'Sensor Module', current_stock:1240, avg_daily_demand:45, lead_time_days:10, unit_cost:19.75, days_to_stockout:27, risk_level:'MEDIUM', recommended_reorder_qty:1350, safety_stock:675 },
+    { sku_id:'SKU-3310', product_name:'HDMI Cables', current_stock:4800, avg_daily_demand:120, lead_time_days:3, unit_cost:8.20, days_to_stockout:40, risk_level:'LOW', recommended_reorder_qty:3600, safety_stock:540 },
+    { sku_id:'SKU-9901', product_name:'Motor Drive PCB', current_stock:380, avg_daily_demand:55, lead_time_days:14, unit_cost:67.30, days_to_stockout:7, risk_level:'HIGH', recommended_reorder_qty:1650, safety_stock:1155 },
+    { sku_id:'SKU-1122', product_name:'Ethernet Switch', current_stock:650, avg_daily_demand:30, lead_time_days:7, unit_cost:42.00, days_to_stockout:21, risk_level:'MEDIUM', recommended_reorder_qty:900, safety_stock:315 },
+  ],
+  suppliers: [
+    { supplier_id:'SUP-001', name:'GlobalParts Co.', region:'China', on_time_rate:0.91, quality_score:88, risk_score:82, risk_level:'LOW' },
+    { supplier_id:'SUP-002', name:'TechParts-IN', region:'India', on_time_rate:0.61, quality_score:72, risk_score:41, risk_level:'HIGH' },
+    { supplier_id:'SUP-003', name:'EuroPrecision', region:'Germany', on_time_rate:0.96, quality_score:95, risk_score:94, risk_level:'LOW' },
+    { supplier_id:'SUP-004', name:'FastShip LLC', region:'USA', on_time_rate:0.78, quality_score:81, risk_score:67, risk_level:'MEDIUM' },
+    { supplier_id:'SUP-005', name:'AsiaTrade Corp', region:'Vietnam', on_time_rate:0.84, quality_score:79, risk_score:71, risk_level:'MEDIUM' },
+  ]
+};
+
+/**
+ * Chart Utilities - Chart.js wrappers
+ */
+
+const CHART_DEFAULTS = {
+  responsive: true,
+  maintainAspectRatio: false,
+  plugins: { legend: { display: false } },
+};
+
+const GRID_COLOR = '#1e2a42';
+const TICK_COLOR = '#8892a4';
+const TICK_FONT  = { size: 10, family: "'DM Mono', monospace" };
+
+function axisDefaults(extra = {}) {
+  return {
+    ticks: { color: TICK_COLOR, font: TICK_FONT },
+    grid:  { color: GRID_COLOR },
+    ...extra
+  };
+}
+
+function makeDelayChart(canvasId) {
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return null;
+  const days = Array.from({ length: 14 }, (_, i) => {
+    const d = new Date(); d.setDate(d.getDate() + i);
+    return d.toLocaleDateString('en', { month: 'short', day: 'numeric' });
+  });
+  const data = [18,22,31,28,45,52,48,61,55,42,38,29,25,22];
+  return new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: days,
+      datasets: [{
+        label: 'Delay Probability %',
+        data,
+        borderColor: '#ef4444',
+        backgroundColor: 'rgba(239,68,68,.12)',
+        fill: true, tension: .4, pointRadius: 3,
+        pointBackgroundColor: '#ef4444'
+      }]
+    },
+    options: {
+      ...CHART_DEFAULTS,
+      scales: {
+        x: axisDefaults({ grid: { color: GRID_COLOR } }),
+        y: axisDefaults({ min: 0, max: 80, ticks: { color: TICK_COLOR, font: TICK_FONT, callback: v => v + '%' } })
+      }
+    }
+  });
+}
+
+function makeRiskPie(canvasId) {
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return null;
+  return new Chart(ctx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Shipment', 'Inventory', 'Supplier', 'Other'],
+      datasets: [{
+        data: [38, 29, 22, 11],
+        backgroundColor: ['#ef4444','#f59e0b','#3b82f6','#00e5a0'],
+        borderWidth: 0, hoverOffset: 6
+      }]
+    },
+    options: { ...CHART_DEFAULTS, cutout: '65%' }
+  });
+}
+
+function makeInventoryChart(canvasId) {
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return null;
+  const labels = Array.from({ length: 30 }, (_, i) => 'D+' + (i + 1));
+  const stock  = Array.from({ length: 30 }, (_, i) => Math.max(0, 4500 - i * 85));
+  const demand = Array.from({ length: 30 }, () => Math.round(85 + (Math.random() - .5) * 30));
+  return new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels,
+      datasets: [
+        { label: 'Stock Level', data: stock, backgroundColor: 'rgba(59,130,246,.3)', borderColor: '#3b82f6', borderWidth: 1, yAxisID: 'y' },
+        { label: 'Daily Demand', data: demand, type: 'line', borderColor: '#f59e0b', backgroundColor: 'transparent', tension: .4, yAxisID: 'y1', pointRadius: 0 }
+      ]
+    },
+    options: {
+      ...CHART_DEFAULTS,
+      scales: {
+        x: { ticks: { color: TICK_COLOR, font: TICK_FONT, maxTicksLimit: 10 }, grid: { display: false } },
+        y: axisDefaults(),
+        y1: { position: 'right', ticks: { color: '#f59e0b', font: TICK_FONT }, grid: { display: false } }
+      }
+    }
+  });
+}
+
+function makeSupplierBarChart(canvasId, suppliers) {
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return null;
+  const colors = suppliers.map(s => s.risk_level === 'LOW' ? '#00e5a0' : s.risk_level === 'HIGH' ? '#ef4444' : '#f59e0b');
+  return new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: suppliers.map(s => s.name.split(' ')[0]),
+      datasets: [{ label: 'Risk Score', data: suppliers.map(s => s.risk_score), backgroundColor: colors }]
+    },
+    options: {
+      ...CHART_DEFAULTS,
+      scales: {
+        x: { ticks: { color: TICK_COLOR, font: TICK_FONT }, grid: { display: false } },
+        y: axisDefaults({ min: 0, max: 100 })
+      }
+    }
+  });
+}
+
+function makeSupplierTrendChart(canvasId) {
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return null;
+  return new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: ['Nov', 'Dec', 'Jan', 'Feb', 'Mar', 'Apr'],
+      datasets: [
+        { label: 'Avg Score', data: [71,69,72,75,76,78], borderColor: '#00e5a0', backgroundColor: 'rgba(0,229,160,.1)', fill: true, tension: .4, pointRadius: 4 },
+        { label: 'TechParts', data: [74,72,68,63,58,41], borderColor: '#ef4444', backgroundColor: 'transparent', tension: .4, pointRadius: 4, borderDash: [4,4] }
+      ]
+    },
+    options: { ...CHART_DEFAULTS, scales: { x: { ticks: { color: TICK_COLOR, font: TICK_FONT }, grid: { display: false } }, y: axisDefaults({ min: 30, max: 100 }) } }
+  });
+}
+
+function makeAnalyticsChart(canvasId) {
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return null;
+  return new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Nov','Dec','Jan','Feb','Mar','Apr','May*','Jun*','Jul*'],
+      datasets: [
+        { label: 'Actual', data: [28,35,41,38,31,29,null,null,null], backgroundColor: 'rgba(59,130,246,.5)', borderColor: '#3b82f6', borderWidth: 1 },
+        { label: 'Forecast', data: [null,null,null,null,null,29,33,27,24], backgroundColor: 'rgba(0,229,160,.2)', borderColor: '#00e5a0', borderWidth: 1 }
+      ]
+    },
+    options: { ...CHART_DEFAULTS, scales: { x: { ticks: { color: TICK_COLOR, font: TICK_FONT }, grid: { display: false } }, y: axisDefaults() } }
+  });
+}
+
+function makeCostChart(canvasId) {
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return null;
+  return new Chart(ctx, {
+    type: 'bar',
+    data: {
+      labels: ['Q1 2026','Q2 2026*','Q3 2026*'],
+      datasets: [
+        { label: 'Delay Costs',     data: [142000,128000,110000], backgroundColor: 'rgba(239,68,68,.6)' },
+        { label: 'Stockout Losses', data: [87000,76000,62000],   backgroundColor: 'rgba(245,158,11,.6)' },
+        { label: 'Supplier Issues', data: [54000,44000,38000],   backgroundColor: 'rgba(59,130,246,.6)' }
+      ]
+    },
+    options: {
+      ...CHART_DEFAULTS,
+      scales: {
+        x: { stacked: true, ticks: { color: TICK_COLOR, font: TICK_FONT }, grid: { display: false } },
+        y: { stacked: true, ticks: { color: TICK_COLOR, font: TICK_FONT, callback: v => '$' + Math.round(v/1000) + 'k' }, grid: { color: GRID_COLOR } }
+      }
+    }
+  });
+}
+
+// Destroy existing chart on a canvas before redrawing
+function destroyChart(canvasId) {
+  const existing = Chart.getChart(canvasId);
+  if (existing) existing.destroy();
+}
+
+function renderDashboard(root) {
+  root.innerHTML = `
+    <div class="grid-4">
+      <div class="card"><div class="metric-label">Active Shipments</div><div class="metric-val text-blue">247</div><div class="metric-change change-bad">↑ 12 delayed</div></div>
+      <div class="card"><div class="metric-label">Inventory Risk</div><div class="metric-val text-yellow">34%</div><div class="metric-change change-bad">↑ 6% from last week</div></div>
+      <div class="card"><div class="metric-label">Supplier Score</div><div class="metric-val text-green">78.4</div><div class="metric-change change-good">↑ improved +2.1</div></div>
+      <div class="card"><div class="metric-label">Avg Delay Risk</div><div class="metric-val text-red">22%</div><div class="metric-change text-muted">across all routes</div></div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="sec-head"><div><div class="sec-title">Shipment Delay Forecast</div><div class="sec-sub">Next 14 days — XGBoost prediction</div></div></div>
+        <div style="position:relative;height:180px"><canvas id="delayChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="sec-head"><div><div class="sec-title">Risk Distribution</div><div class="sec-sub">By category</div></div></div>
+        <div style="display:flex;gap:16px;align-items:center">
+          <div style="position:relative;height:160px;width:160px;flex-shrink:0"><canvas id="riskPie"></canvas></div>
+          <div style="flex:1">
+            ${[['Shipment Delays','38%','var(--red)'],['Inventory Shortage','29%','var(--yellow)'],['Supplier Issues','22%','var(--blue)'],['Other','11%','var(--green)']].map(([l,v,c]) => `
+            <div class="mb-8">
+              <div class="d-flex justify-between mb-4" style="font-size:11px"><span>${l}</span><span class="mono" style="color:${c}">${v}</span></div>
+              <div class="bar-wrap"><div class="bar-fill" style="width:${v};background:${c}"></div></div>
+            </div>`).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="card">
+        <div class="sec-head"><div class="sec-title">Active Alerts</div><span class="tag tag-red">3 critical</span></div>
+        <div class="alert alert-red"><span class="alert-icon" style="color:var(--red)">⚠</span><div><strong>Route US-CN-047 — 87% delay probability</strong><span>Predicted 4.2 day delay — typhoon season impact detected</span></div></div>
+        <div class="alert alert-red"><span class="alert-icon" style="color:var(--red)">⚠</span><div><strong>SKU-8821 inventory critical — 3 days to stockout</strong><span>Demand spike detected, reorder recommended immediately</span></div></div>
+        <div class="alert alert-yellow"><span class="alert-icon" style="color:var(--yellow)">◎</span><div><strong>Supplier TechParts-IN reliability dropped to 61%</strong><span>3 consecutive late deliveries — consider backup sourcing</span></div></div>
+      </div>
+      <div class="card">
+        <div class="sec-head"><div class="sec-title">Recent Shipments</div></div>
+        <table>
+          <thead><tr><th>ID</th><th>Route</th><th>ETA</th><th>Risk</th></tr></thead>
+          <tbody>
+            ${DEMO.shipments.slice(0,5).map(s => `
+            <tr>
+              <td class="mono" style="font-size:11px">${s.shipment_id}</td>
+              <td>${s.origin} → ${s.destination}</td>
+              <td>${s.eta}</td>
+              <td><span class="${riskClass(s.risk_level)}">${s.risk_level}</span></td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>
+    </div>`;
+
+  destroyChart('delayChart'); makeDelayChart('delayChart');
+  destroyChart('riskPie');    makeRiskPie('riskPie');
+}
+
+function renderPredict(root) {
+  root.innerHTML = `
+    <div class="grid-2">
+      <div class="card">
+        <div class="sec-head"><div><div class="sec-title">Shipment Delay Predictor</div><div class="sec-sub">XGBoost model — trained on 50,000 records</div></div></div>
+        <div class="form-group"><label class="form-label">Origin Port</label>
+          <select id="p-origin"><option>Mumbai</option><option>Shanghai</option><option>Dubai</option><option>Hamburg</option><option>Los Angeles</option><option>Tokyo</option></select></div>
+        <div class="form-group"><label class="form-label">Destination Port</label>
+          <select id="p-dest"><option>Los Angeles</option><option>New York</option><option>Rotterdam</option><option>Tokyo</option><option>Sydney</option><option>Mumbai</option></select></div>
+        <div class="form-group"><label class="form-label">Carrier</label>
+          <select id="p-carrier"><option>Maersk</option><option>MSC</option><option>CMA CGM</option><option>COSCO</option><option>Hapag-Lloyd</option></select></div>
+        <div class="form-group"><label class="form-label">Cargo Type</label>
+          <select id="p-cargo"><option>Electronics</option><option>Perishables</option><option>Industrial Parts</option><option>Textiles</option><option>Chemicals</option></select></div>
+        <div class="form-group"><label class="form-label">Departure Date</label>
+          <input type="date" id="p-date" value="${new Date().toISOString().split('T')[0]}"></div>
+        <div class="form-group"><label class="form-label">Weight (kg)</label>
+          <input type="number" id="p-weight" value="12500" min="100" max="50000"></div>
+        <button class="btn btn-primary" style="width:100%;margin-top:4px" onclick="runPrediction()">⊕ Run ML Prediction</button>
+      </div>
+
+      <div>
+        <div class="card mb-12" id="pred-result">
+          <div class="sec-title mb-12">Prediction Output</div>
+          <div id="pred-waiting" style="text-align:center;padding:30px;color:var(--text2);font-size:13px">
+            Configure parameters and click Run ML Prediction
+          </div>
+          <div id="pred-output" style="display:none">
+            <div style="display:flex;gap:12px;margin-bottom:14px">
+              <div style="flex:1;background:var(--bg3);border-radius:8px;padding:14px;text-align:center">
+                <div class="metric-label">Delay Probability</div>
+                <div id="pred-delay-val" class="metric-val text-red">--</div>
+              </div>
+              <div style="flex:1;background:var(--bg3);border-radius:8px;padding:14px;text-align:center">
+                <div class="metric-label">Expected Delay</div>
+                <div id="pred-days-val" class="metric-val text-yellow">--</div>
+              </div>
+              <div style="flex:1;background:var(--bg3);border-radius:8px;padding:14px;text-align:center">
+                <div class="metric-label">Risk Level</div>
+                <div id="pred-risk-level" class="metric-val" style="font-size:16px">--</div>
+              </div>
+            </div>
+            <div class="mb-12">
+              <div class="sec-sub mb-8">Feature Importance (SHAP)</div>
+              <div id="shap-bars"></div>
+            </div>
+            <div id="pred-alert"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="sec-title mb-12">Inventory Shortage Check</div>
+          <div class="form-group"><label class="form-label">SKU ID</label>
+            <input type="text" id="inv-sku" placeholder="e.g. SKU-8821"></div>
+          <div class="form-group"><label class="form-label">Current Stock (units)</label>
+            <input type="number" id="inv-stock" value="450"></div>
+          <div class="form-group"><label class="form-label">Avg Daily Demand</label>
+            <input type="number" id="inv-demand" value="85"></div>
+          <div class="form-group"><label class="form-label">Lead Time (days)</label>
+            <input type="number" id="inv-lead" value="7"></div>
+          <button class="btn btn-primary" style="width:100%" onclick="checkInventory()">Check Shortage Risk</button>
+          <div id="inv-result" style="margin-top:12px;display:none"></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function runPrediction() {
+  const origin   = document.getElementById('p-origin').value;
+  const dest     = document.getElementById('p-dest').value;
+  const carrier  = document.getElementById('p-carrier').value;
+  const cargo    = document.getElementById('p-cargo').value;
+  const weight   = parseInt(document.getElementById('p-weight').value) || 12500;
+  const dateStr  = document.getElementById('p-date').value;
+  const month    = dateStr ? new Date(dateStr).getMonth() + 1 : 5;
+
+  // Simulate XGBoost prediction logic
+  let base = Math.random() * 35 + 10;
+  if (cargo === 'Perishables')   base += 18;
+  if (weight > 20000)            base += 12;
+  if ([6,7,8,9].includes(month)) base += 15;  // typhoon season
+  if (origin === 'Mumbai' && dest === 'Los Angeles') base += 18;
+  if (carrier === 'COSCO')       base += 8;
+
+  const prob     = Math.min(95, Math.round(base));
+  const delayDays = prob > 50 ? (prob / 100 * 5).toFixed(1) : (prob / 100 * 2).toFixed(1);
+
+  const factors = [
+    { name: 'Weather / Season',  val: Math.round(15 + Math.random() * 20) },
+    { name: 'Route Congestion',  val: Math.round(12 + Math.random() * 18) },
+    { name: 'Port Efficiency',   val: Math.round(10 + Math.random() * 15) },
+    { name: 'Carrier History',   val: Math.round(8  + Math.random() * 12) },
+    { name: 'Cargo Type',        val: cargo === 'Perishables' ? 18 : Math.round(5 + Math.random() * 10) },
+    { name: 'Weight Factor',     val: Math.min(15, Math.round(weight / 50000 * 20)) },
+  ];
+  const total = factors.reduce((s, f) => s + f.val, 0);
+
+  document.getElementById('pred-waiting').style.display = 'none';
+  document.getElementById('pred-output').style.display  = 'block';
+  document.getElementById('pred-delay-val').textContent = prob + '%';
+  document.getElementById('pred-days-val').textContent  = delayDays + 'd';
+
+  const rlEl = document.getElementById('pred-risk-level');
+  const rl   = prob >= 60 ? 'HIGH' : prob >= 30 ? 'MEDIUM' : 'LOW';
+  rlEl.textContent = rl;
+  rlEl.style.color = prob >= 60 ? 'var(--red)' : prob >= 30 ? 'var(--yellow)' : 'var(--green)';
+
+  document.getElementById('shap-bars').innerHTML = factors.map(f => {
+    const pct = Math.round(f.val / total * 100);
+    return `<div class="mb-8">
+      <div class="d-flex justify-between mb-4" style="font-size:11px"><span>${f.name}</span><span class="mono text-yellow">${pct}%</span></div>
+      <div class="bar-wrap"><div class="bar-fill" style="width:${pct}%;background:var(--yellow)"></div></div>
+    </div>`;
+  }).join('');
+
+  const alertEl = document.getElementById('pred-alert');
+  if (prob >= 60) {
+    alertEl.className = 'alert alert-red';
+    alertEl.innerHTML = '<span class="alert-icon" style="color:var(--red)">⚠</span><div><strong>High Risk Detected</strong><span>Consider alternate routing or early dispatch to mitigate delay risk.</span></div>';
+  } else if (prob >= 30) {
+    alertEl.className = 'alert alert-yellow';
+    alertEl.innerHTML = '<span class="alert-icon" style="color:var(--yellow)">◎</span><div><strong>Moderate Risk</strong><span>Monitor closely and have contingency plan ready.</span></div>';
+  } else {
+    alertEl.className = 'alert alert-green';
+    alertEl.innerHTML = '<span class="alert-icon" style="color:var(--green)">✓</span><div><strong>Low Risk</strong><span>Shipment is expected to arrive on schedule.</span></div>';
+  }
+}
+
+function checkInventory() {
+  const stock  = parseInt(document.getElementById('inv-stock').value)  || 0;
+  const demand = parseFloat(document.getElementById('inv-demand').value) || 1;
+  const lead   = parseInt(document.getElementById('inv-lead').value)   || 7;
+  const sku    = document.getElementById('inv-sku').value || 'SKU-XXXX';
+  const days   = Math.floor(stock / demand);
+  const reorderQty = Math.round(demand * 30);
+  const safetyStock = Math.round(demand * lead * 1.5);
+
+  let cls, html;
+  if (days <= 7) {
+    cls  = 'alert alert-red';
+    html = `<strong>CRITICAL — ${days} days until stockout for ${sku}</strong><span>Emergency reorder needed. Suggested qty: ${reorderQty.toLocaleString()} units. Safety stock: ${safetyStock.toLocaleString()} units.</span>`;
+  } else if (days <= 21) {
+    cls  = 'alert alert-yellow';
+    html = `<strong>WARNING — ${days} days of stock remaining for ${sku}</strong><span>Plan reorder within 7 days. Suggested qty: ${reorderQty.toLocaleString()} units.</span>`;
+  } else {
+    cls  = 'alert alert-green';
+    html = `<strong>OK — ${days} days of coverage for ${sku}</strong><span>Stock levels adequate. Next review in 14 days.</span>`;
+  }
+  const r = document.getElementById('inv-result');
+  r.className = cls; r.innerHTML = html; r.style.display = 'flex'; r.style.gap = '10px';
+}
+
+// ── INVENTORY PAGE ────────────────────────────────────────────────────────────
+function renderInventory(root) {
+  root.innerHTML = `
+    <div class="grid-4">
+      <div class="card"><div class="metric-label">Total SKUs</div><div class="metric-val">1,842</div></div>
+      <div class="card"><div class="metric-label">At Risk</div><div class="metric-val text-red">47</div></div>
+      <div class="card"><div class="metric-label">Overstocked</div><div class="metric-val text-yellow">123</div></div>
+      <div class="card"><div class="metric-label">Avg Coverage</div><div class="metric-val text-green">18.3d</div></div>
+    </div>
+    <div class="card mb-16">
+      <div class="sec-head"><div class="sec-title">Demand Forecast vs Stock Levels</div><span class="tag tag-blue">Next 30 days</span></div>
+      <div style="position:relative;height:200px"><canvas id="invChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><div class="sec-title">Critical Stock Items</div><span class="tag tag-red">Immediate action needed</span></div>
+      <table>
+        <thead><tr><th>SKU</th><th>Product</th><th>Stock</th><th>Daily Demand</th><th>Days Left</th><th>Risk</th><th>Action</th></tr></thead>
+        <tbody>
+          ${DEMO.inventory.map(item => `
+          <tr>
+            <td class="mono" style="font-size:11px">${item.sku_id}</td>
+            <td>${item.product_name}</td>
+            <td>${item.current_stock.toLocaleString()}</td>
+            <td>${item.avg_daily_demand}</td>
+            <td style="color:${item.days_to_stockout<=7?'var(--red)':item.days_to_stockout<=21?'var(--yellow)':'var(--green)'}">${item.days_to_stockout}d</td>
+            <td><span class="${riskClass(item.risk_level)}">${item.risk_level}</span></td>
+            <td>${item.days_to_stockout<=14
+              ? `<button class="btn btn-sm btn-primary" onclick="reorder('${item.sku_id}')">Reorder</button>`
+              : `<button class="btn btn-sm btn-outline">OK</button>`}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  destroyChart('invChart'); makeInventoryChart('invChart');
+}
+
+// ── SUPPLIERS PAGE ────────────────────────────────────────────────────────────
+function renderSuppliers(root) {
+  root.innerHTML = `
+    <div class="grid-3">
+      <div class="card"><div class="metric-label">Total Suppliers</div><div class="metric-val">84</div></div>
+      <div class="card"><div class="metric-label">High Risk</div><div class="metric-val text-red">9</div></div>
+      <div class="card"><div class="metric-label">Avg Reliability</div><div class="metric-val text-green">77%</div></div>
+    </div>
+    <div class="grid-2">
+      <div class="card mb-16">
+        <div class="sec-head"><div class="sec-title">Risk Scores by Supplier</div></div>
+        <div style="position:relative;height:200px"><canvas id="supplierChart"></canvas></div>
+      </div>
+      <div class="card mb-16">
+        <div class="sec-head"><div class="sec-title">Risk Score Trend</div><div class="sec-sub">Last 6 months</div></div>
+        <div style="position:relative;height:200px"><canvas id="supplierTrend"></canvas></div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="sec-head"><div class="sec-title">Supplier Risk Scorecard</div></div>
+      <table>
+        <thead><tr><th>Supplier</th><th>Region</th><th>On-Time %</th><th>Quality Score</th><th>Risk Score</th><th>Status</th></tr></thead>
+        <tbody>
+          ${DEMO.suppliers.map(s => `
+          <tr>
+            <td>${s.name}</td>
+            <td>${s.region}</td>
+            <td>${Math.round(s.on_time_rate*100)}%</td>
+            <td>${s.quality_score}/100</td>
+            <td style="color:${s.risk_score>=75?'var(--green)':s.risk_score>=50?'var(--yellow)':'var(--red)'}">${s.risk_score}</td>
+            <td><span class="${riskClass(s.risk_level)}">${s.risk_level}</span></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  destroyChart('supplierChart'); makeSupplierBarChart('supplierChart', DEMO.suppliers);
+  destroyChart('supplierTrend'); makeSupplierTrendChart('supplierTrend');
+}
+
+// ── SHIPMENTS PAGE ────────────────────────────────────────────────────────────
+function renderShipments(root) {
+  const routes  = ['US-CN','US-EU','US-IN','EU-CN','EU-IN','AS-US','ME-EU'];
+  const weeks   = ['W1','W2','W3','W4','W5','W6','W7'];
+  const heatRows = routes.map(r => {
+    const cells = weeks.map(() => {
+      const v = Math.random();
+      const bg = v > 0.6 ? `rgba(239,68,68,${0.3+v*0.5})` : v > 0.3 ? `rgba(245,158,11,${0.3+v*0.4})` : `rgba(0,229,160,${0.2+v*0.4})`;
+      return `<div style="height:28px;border-radius:4px;background:${bg};display:flex;align-items:center;justify-content:center;font-size:9px;font-family:monospace;color:rgba(255,255,255,.8)">${Math.round(v*100)}%</div>`;
+    }).join('');
+    return `<div style="display:grid;grid-template-columns:60px repeat(7,1fr);gap:4px;margin-bottom:4px">
+      <div style="font-size:10px;color:var(--text2);display:flex;align-items:center">${r}</div>${cells}</div>`;
+  }).join('');
+
+  root.innerHTML = `
+    <div class="grid-4">
+      <div class="card"><div class="metric-label">In Transit</div><div class="metric-val">247</div></div>
+      <div class="card"><div class="metric-label">Delayed</div><div class="metric-val text-red">31</div></div>
+      <div class="card"><div class="metric-label">On Time</div><div class="metric-val text-green">198</div></div>
+      <div class="card"><div class="metric-label">Avg Delay</div><div class="metric-val text-yellow">2.4d</div></div>
+    </div>
+    <div class="card mb-16">
+      <div class="sec-head"><div class="sec-title">Route Risk Heatmap</div><div class="sec-sub">Color intensity = delay probability</div></div>
+      <div style="display:grid;grid-template-columns:60px repeat(7,1fr);gap:4px;margin-bottom:6px">
+        <div></div>${weeks.map(w=>`<div style="text-align:center;font-size:10px;color:var(--text2)">${w}</div>`).join('')}
+      </div>
+      ${heatRows}
+    </div>
+    <div class="card">
+      <div class="sec-head">
+        <div class="sec-title">All Shipments</div>
+        <input type="text" id="ship-search" placeholder="Search ID or route..." onkeyup="filterShipments()" style="width:200px;padding:6px 10px;font-size:12px">
+      </div>
+      <table>
+        <thead><tr><th>ID</th><th>Origin</th><th>Destination</th><th>Carrier</th><th>ETA</th><th>Delay Risk</th><th>Status</th></tr></thead>
+        <tbody id="ship-table">
+          ${DEMO.shipments.map(s => `
+          <tr data-search="${s.shipment_id.toLowerCase()} ${s.origin.toLowerCase()} ${s.destination.toLowerCase()}">
+            <td class="mono" style="font-size:11px">${s.shipment_id}</td>
+            <td>${s.origin}</td><td>${s.destination}</td><td>${s.carrier}</td><td>${s.eta}</td>
+            <td><div class="bar-wrap" style="width:80px"><div class="bar-fill" style="width:${s.delay_risk_pct}%;background:${barColor(s.delay_risk_pct)}"></div></div></td>
+            <td><span class="${statusClass(s.status)}">${s.status.replace('_',' ')}</span></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+}
+
+function filterShipments() {
+  const q = document.getElementById('ship-search').value.toLowerCase();
+  document.querySelectorAll('#ship-table tr').forEach(tr => {
+    tr.style.display = (tr.dataset.search || '').includes(q) ? '' : 'none';
+  });
+}
+
+// ── ANALYTICS PAGE ─────────────────────────────────────────────────────────────
+function renderAnalytics(root) {
+  root.innerHTML = `
+    <div class="card mb-16">
+      <div class="sec-head"><div class="sec-title">Monthly Delay Trend & Forecast</div><span class="tag tag-green">ML Forecast — XGBoost</span></div>
+      <div style="position:relative;height:220px"><canvas id="analyticsChart"></canvas></div>
+    </div>
+    <div class="grid-2">
+      <div class="card">
+        <div class="sec-head"><div class="sec-title">Cost Impact by Category</div></div>
+        <div style="position:relative;height:200px"><canvas id="costChart"></canvas></div>
+      </div>
+      <div class="card">
+        <div class="sec-head"><div class="sec-title">Model Performance Metrics</div></div>
+        ${[
+          ['XGBoost Accuracy','91.4%','var(--green)'],
+          ['Precision','88.7%','var(--blue)'],
+          ['Recall','85.2%','var(--yellow)'],
+          ['F1 Score','86.9%','var(--accent)'],
+        ].map(([l,v,c]) => `
+        <div style="display:flex;justify-content:space-between;margin-bottom:12px">
+          <div style="font-size:12px;color:var(--text2)">${l}</div>
+          <div style="font-size:20px;font-weight:700;font-family:'Syne',sans-serif;color:${c}">${v}</div>
+        </div>`).join('')}
+        <hr style="border:none;border-top:1px solid var(--border);margin:12px 0">
+        ${[
+          ['Shipment Delay Model','91%','var(--green)'],
+          ['Inventory Forecast Model','87%','var(--blue)'],
+          ['Supplier Risk Model','84%','var(--yellow)'],
+        ].map(([l,w,c]) => `
+        <div class="mb-8">
+          <div class="d-flex justify-between mb-4" style="font-size:11px"><span>${l}</span><span class="mono" style="color:${c}">${w}</span></div>
+          <div class="bar-wrap"><div class="bar-fill" style="width:${w};background:${c}"></div></div>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  destroyChart('analyticsChart'); makeAnalyticsChart('analyticsChart');
+  destroyChart('costChart');      makeCostChart('costChart');
+}
+
+// ── RECOMMENDATIONS PAGE ───────────────────────────────────────────────────────
+function renderRecommendations(root) {
+  root.innerHTML = `
+    <div class="grid-3 mb-16">
+      <div class="card"><div class="metric-label">Open Actions</div><div class="metric-val text-yellow">11</div></div>
+      <div class="card"><div class="metric-label">Completed</div><div class="metric-val text-green">34</div></div>
+      <div class="card"><div class="metric-label">Risk Reduced</div><div class="metric-val text-blue">18%</div></div>
+    </div>
+    <div class="grid-2">
+      <div>
+        <div class="sec-head mb-12"><div class="sec-title">Critical Recommendations</div><span class="tag tag-red">Urgent</span></div>
+        <div class="rec-card">
+          <div class="rec-icon" style="background:rgba(239,68,68,.15)">🚨</div>
+          <div><div class="rec-title">Expedite SKU-8821 reorder immediately</div>
+          <div class="rec-desc">Current stock will deplete in 3 days. Activate emergency supplier FastShip LLC. Estimated cost: $14,200</div>
+          <div class="rec-actions"><button class="btn btn-sm btn-primary" onclick="alert('Reorder PO-4821 created!')">Take Action</button><button class="btn btn-sm btn-outline">Dismiss</button></div></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-icon" style="background:rgba(239,68,68,.15)">⚡</div>
+          <div><div class="rec-title">Reroute SH-2041 via Pacific North route</div>
+          <div class="rec-desc">Current route has 87% delay probability. Alternative reduces delay risk to 23%. Extra cost: $2,800</div>
+          <div class="rec-actions"><button class="btn btn-sm btn-primary" onclick="alert('Reroute approved! Updated ETA: May 5')">Approve Reroute</button><button class="btn btn-sm btn-outline">Review</button></div></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-icon" style="background:rgba(245,158,11,.15)">⚠</div>
+          <div><div class="rec-title">Qualify backup supplier for TechParts-IN</div>
+          <div class="rec-desc">Reliability dropped to 61%. Recommend onboarding EuroPrecision as secondary source for critical components.</div>
+          <div class="rec-actions"><button class="btn btn-sm btn-outline" onclick="alert('Supplier qualification process started!')">Start Process</button></div></div>
+        </div>
+      </div>
+      <div>
+        <div class="sec-head mb-12"><div class="sec-title">Optimization Suggestions</div><span class="tag tag-blue">AI Insights</span></div>
+        <div class="rec-card">
+          <div class="rec-icon" style="background:rgba(0,229,160,.15)">📦</div>
+          <div><div class="rec-title">Increase safety stock for Q2 demand spike</div>
+          <div class="rec-desc">ML model forecasts 32% demand increase in next 6 weeks. Recommend raising safety stock buffer from 15% to 25%.</div></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-icon" style="background:rgba(59,130,246,.15)">🔄</div>
+          <div><div class="rec-title">Consolidate shipments on Hamburg→Asia route</div>
+          <div class="rec-desc">3 separate shipments in next 2 weeks can be consolidated. Estimated savings: $8,400 in freight costs.</div></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-icon" style="background:rgba(245,158,11,.15)">📊</div>
+          <div><div class="rec-title">Enable real-time API for Port of Shanghai</div>
+          <div class="rec-desc">Integration would improve delay prediction accuracy by estimated 7.3% for Asia-Pacific routes.</div></div>
+        </div>
+        <div class="rec-card">
+          <div class="rec-icon" style="background:rgba(0,229,160,.15)">✅</div>
+          <div><div class="rec-title">EuroPrecision contract renewal — favorable</div>
+          <div class="rec-desc">Supplier maintains 96% on-time rate. Recommend long-term contract to lock in pricing before Q3.</div></div>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── UPLOAD PAGE ────────────────────────────────────────────────────────────────
+function renderUpload(root) {
+  root.innerHTML = `
+    <div class="grid-2">
+      <div>
+        <div class="sec-title mb-16">Upload Supply Chain Dataset</div>
+        <div class="upload-zone" onclick="simulateUpload('shipments')">
+          <div class="upload-zone-icon">📦</div>
+          <div class="upload-zone-title">Shipment Data (CSV / Excel)</div>
+          <div class="upload-zone-sub">Orders, routes, carriers, ETAs, weights</div>
+        </div>
+        <div class="upload-zone" onclick="simulateUpload('inventory')">
+          <div class="upload-zone-icon">🗄️</div>
+          <div class="upload-zone-title">Inventory Records (CSV / Excel)</div>
+          <div class="upload-zone-sub">SKU, stock levels, demand history</div>
+        </div>
+        <div class="upload-zone" onclick="simulateUpload('suppliers')">
+          <div class="upload-zone-icon">🏭</div>
+          <div class="upload-zone-title">Supplier Performance (CSV / Excel)</div>
+          <div class="upload-zone-sub">Delivery history, quality scores</div>
+        </div>
+        <div class="alert alert-blue mt-12" style="margin-top:12px">
+          <span class="alert-icon" style="color:var(--blue)">ℹ</span>
+          <div><strong>Backend API endpoint</strong><span>POST /api/predict/batch-upload — accepts CSV/Excel with columns: origin, destination, carrier, cargo_type, weight_kg</span></div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <div class="sec-title mb-16">Data Processing Pipeline</div>
+          <div id="pipeline-steps">
+            ${[
+              ['Data Collection',    'Import CSV/Excel or connect live API data sources',        'var(--green)','dot-collect'],
+              ['Data Preprocessing', 'Handle missing values, normalize, encode categoricals',    'var(--green)','dot-preproc'],
+              ['ML Model Inference', 'XGBoost + Scikit-learn prediction pipeline runs',          'var(--border2)','dot-ml'],
+              ['Risk Scoring',       'Calculate composite risk scores and generate alerts',      'var(--border2)','dot-risk'],
+              ['Dashboard Update',   'Visualize insights and generate recommendations',          'var(--border2)','dot-dash'],
+            ].map(([title, sub, color, dotId], i, arr) => `
+            <div class="timeline-item">
+              <div class="tl-left">
+                <div class="tl-dot" id="${dotId}" style="background:${color}"></div>
+                ${i < arr.length-1 ? '<div class="tl-line"></div>' : ''}
+              </div>
+              <div class="tl-content">
+                <div class="tl-title">${title}</div>
+                <div class="tl-sub">${sub}</div>
+              </div>
+            </div>`).join('')}
+          </div>
+          <div class="upload-log" id="upload-log">> System ready. Click a dataset above to simulate the processing pipeline.</div>
+        </div>
+      </div>
+    </div>`;
+}
+
+function simulateUpload(type) {
+  const log  = document.getElementById('upload-log');
+  const dots = ['dot-ml','dot-risk','dot-dash'];
+  const info = { shipments:['shipment_data.csv','247 shipment records'], inventory:['inventory.xlsx','1,842 SKU records'], suppliers:['supplier_performance.csv','84 supplier records'] };
+  const [file, records] = info[type];
+  dots.forEach(id => { const d=document.getElementById(id); if(d) d.style.background='var(--border2)'; });
+  log.textContent = `> Loading ${file}...`;
+  const steps = [
+    [400,  `> Parsing ${records}...`],
+    [800,  `> Checking for missing values...`],
+    [1200, `> Encoding categorical variables...`],
+    [1600, `> Feature engineering complete ✓`],
+    [2000, `> Running XGBoost inference pipeline...`],
+    [2400, `> Calculating composite risk scores...`],
+    [2800, `> Generating alerts and recommendations...`],
+    [3200, `> Updating dashboard metrics...`],
+    [3600, `> ✅ Pipeline complete! ${records} processed successfully.`],
+  ];
+  let dotIdx = 0;
+  steps.forEach(([t, msg], i) => {
+    setTimeout(() => {
+      log.textContent += '\n' + msg;
+      log.scrollTop = log.scrollHeight;
+      if (i >= 3 && dotIdx < dots.length) {
+        const d = document.getElementById(dots[dotIdx]);
+        if (d) d.style.background = 'var(--green)';
+        dotIdx++;
+      }
+    }, t);
+  });
+}
+
+/**
+ * App.js - Main application entry point
+ * Handles page routing, live clock, and global utilities
+ */
+
+const PAGE_TITLES = {
+  dashboard: 'Dashboard Overview',
+  predict:   'Risk Prediction Engine',
+  inventory: 'Inventory Risk Monitor',
+  suppliers: 'Supplier Scorecard',
+  shipments: 'Shipment Tracker',
+  analytics: 'Analytics & Forecasting',
+  recommendations: 'AI Recommendations',
+  upload:    'Data Upload & Processing'
+};
+
+const PAGE_RENDERERS = {
+  dashboard:       renderDashboard,
+  predict:         renderPredict,
+  inventory:       renderInventory,
+  suppliers:       renderSuppliers,
+  shipments:       renderShipments,
+  analytics:       renderAnalytics,
+  recommendations: renderRecommendations,
+  upload:          renderUpload,
+};
+
+let currentPage = 'dashboard';
+
+function gotoPage(id, btn) {
+  currentPage = id;
+  document.getElementById('page-title').textContent = PAGE_TITLES[id] || id;
+  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+  if (btn) btn.classList.add('active');
+  const root = document.getElementById('page-root');
+  root.innerHTML = '<div class="loading"><div class="spinner"></div>Loading...</div>';
+  setTimeout(() => {
+    if (PAGE_RENDERERS[id]) PAGE_RENDERERS[id](root);
+  }, 80);
+}
+
+function refreshData() {
+  const btn = document.querySelector('.topbar-right .btn-outline');
+  if (btn) { btn.textContent = '↻ Refreshing...'; }
+  setTimeout(() => {
+    if (btn) btn.textContent = '↻ Refresh';
+    gotoPage(currentPage, document.querySelector('.nav-item.active'));
+  }, 800);
+}
+
+// Live clock
+function updateClock() {
+  const el = document.getElementById('live-time');
+  if (el) el.textContent = new Date().toLocaleTimeString();
+}
+setInterval(updateClock, 1000);
+updateClock();
+
+// Boot
+window.addEventListener('DOMContentLoaded', () => {
+  gotoPage('dashboard', document.querySelector('.nav-item.active'));
+});
+
+// Helpers
+function riskClass(level) {
+  const m = { HIGH:'risk-high', CRITICAL:'risk-critical', MEDIUM:'risk-med', LOW:'risk-low' };
+  return 'risk ' + (m[level] || 'risk-low');
+}
+
+function statusClass(status) {
+  const m = { DELAYED:'risk-high', AT_RISK:'risk-med', ON_TIME:'risk-low', DELIVERED:'risk-low' };
+  return 'risk ' + (m[status] || 'risk-low');
+}
+
+function barColor(pct) {
+  if (pct >= 60) return 'var(--red)';
+  if (pct >= 30) return 'var(--yellow)';
+  return 'var(--green)';
+}
+
+function reorder(skuId) {
+  const po = 'PO-' + Math.floor(Math.random() * 9000 + 1000);
+  alert(`✅ Reorder request created!\n\nPurchase Order: ${po}\nSKU: ${skuId}\nStatus: Pending Approval\n\nCheck the Inventory page for details.`);
+}
+
+</script>
+</body></html>
